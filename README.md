@@ -108,3 +108,5 @@ aws ecs update-service --cluster <cluster> --service <service> --task-definition
 
 <img width="1065" height="747" alt="Screenshot 2026-08-06 at 01 10 09" src="https://github.com/user-attachments/assets/96bed1be-7ce6-4b83-9217-156ba1fdc90f" />
 <img width="1461" height="871" alt="Screenshot 2026-08-06 at 01 11 07" src="https://github.com/user-attachments/assets/f6952f2f-1d5f-4504-8b03-d7bf2162555a" />
+<img width="1461" height="878" alt="Screenshot 2026-08-06 at 01 11 27" src="https://github.com/user-attachments/assets/e573aa57-3249-404d-9eb5-751489be90d9" />
+
