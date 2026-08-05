@@ -1,0 +1,8 @@
+sec_rag_env/
+sec_filings_raw/
+vector_index/
+__pycache__/
+*.pyc
+bedrock-test-output.json
+.DS_Store
+sec_filings_raw.zip

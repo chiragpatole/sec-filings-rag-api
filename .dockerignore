@@ -1,0 +1,8 @@
+sec_rag_env/
+sec_filings_raw/
+__pycache__/
+*.pyc
+.git/
+Edgar_ingest.py
+query_index.py
+debug_chunk.py

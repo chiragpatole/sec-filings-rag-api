@@ -1,0 +1,40 @@
+{
+  "family": "sec-filings-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "3072",
+  "executionRoleArn": "arn:aws:iam::119044827757:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "sec-filings-api",
+      "image": "119044827757.dkr.ecr.us-east-1.amazonaws.com/sec-filings-api:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "value": "REPLACE_WITH_API_KEY"
+        }
+      ],
+      "environment": [
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "value": "REPLACE_WITH_API_KEY"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/sec-filings-api",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filing Room — SEC Filings Q&A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14181d;
+    --ink-raised: #1b2129;
+    --parchment: #eee7d6;
+    --parchment-dim: #a9a08c;
+    --gold: #c9a24b;
+    --gold-dim: #8a7239;
+    --line: #2a323c;
+    --error: #c9634b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  header {
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 28px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: 34px;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .sub {
+    color: var(--parchment-dim);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 54ch;
+  }
+
+  .config {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 18px;
+    font-size: 11px;
+    color: var(--parchment-dim);
+  }
+  .config input {
+    background: var(--ink-raised);
+    border: 1px solid var(--line);
+    color: var(--parchment-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 6px 8px;
+    border-radius: 3px;
+    width: 220px;
+  }
+  .config input:focus { outline: 1px solid var(--gold-dim); }
+
+  form.ask {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ask input[type="text"] {
+    flex: 1;
+    background: var(--ink-raised);
+    border: 1px solid var(--line);
+    color: var(--parchment);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .ask input[type="text"]:focus {
+    outline: none;
+    border-color: var(--gold-dim);
+  }
+  .ask button {
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 13px;
+    padding: 0 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+  .ask button:hover { background: #d9b562; }
+  .ask button:disabled { background: var(--gold-dim); cursor: default; }
+
+  .examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .example {
+    font-size: 11px;
+    color: var(--parchment-dim);
+    border: 1px solid var(--line);
+    padding: 6px 11px;
+    border-radius: 100px;
+    cursor: pointer;
+    background: transparent;
+  }
+  .example:hover { border-color: var(--gold-dim); color: var(--parchment); }
+
+  .state { color: var(--parchment-dim); font-size: 13px; padding: 20px 0; }
+  .state.error { color: var(--error); }
+
+  .result { display: none; }
+  .result.show { display: block; animation: fade 0.3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .answer-block {
+    background: var(--ink-raised);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 24px 26px;
+    margin-bottom: 28px;
+  }
+  .answer-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .answer-text {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--parchment);
+    white-space: pre-wrap;
+  }
+  .answer-text strong { color: var(--gold); font-weight: 600; }
+
+  .sources-label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--parchment-dim);
+    margin: 0 0 12px 2px;
+  }
+  .source {
+    border-top: 1px solid var(--line);
+    padding: 14px 2px;
+  }
+  .source:last-child { border-bottom: 1px solid var(--line); }
+  .source-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .source-meta .dist { color: var(--parchment-dim); }
+  .source-text {
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--parchment-dim);
+  }
+
+  footer {
+    margin-top: 60px;
+    font-size: 11px;
+    color: var(--parchment-dim);
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Filing Room</div>
+    <h1>Ask real SEC filings</h1>
+    <p class="sub">Retrieval-augmented Q&A over actual 10-K / 10-Q risk factor disclosures from Tesla, Apple, and Microsoft — grounded answers, cited to source.</p>
+    <div class="config">
+      <span>API endpoint</span>
+      <input type="text" id="apiBase" value="http://127.0.0.1:8000" spellcheck="false">
+    </div>
+  </header>
+
+  <form class="ask" id="askForm">
+    <input type="text" id="question" placeholder="What supply chain risks does Apple disclose?" autocomplete="off">
+    <button type="submit" id="submitBtn">Ask</button>
+  </form>
+
+  <div class="examples">
+    <button type="button" class="example" data-q="What competition risks does Microsoft disclose?">Microsoft — competition risks</button>
+    <button type="button" class="example" data-q="What supply chain risks does Apple face?">Apple — supply chain</button>
+    <button type="button" class="example" data-q="What cybersecurity risks are disclosed?">Cybersecurity risks</button>
+    <button type="button" class="example" data-q="What key-person risks does Tesla disclose?">Tesla — key-person risk</button>
+  </div>
+
+  <div class="state" id="state"></div>
+
+  <div class="result" id="result">
+    <div class="answer-block">
+      <div class="answer-label">Generated answer</div>
+      <div class="answer-text" id="answerText"></div>
+    </div>
+    <div class="sources-label">Retrieved sources</div>
+    <div id="sources"></div>
+  </div>
+
+  <footer>Backed by a FAISS vector index over cleaned, chunked SEC EDGAR filings. Generation via Claude.</footer>
+</div>
+
+<script>
+const form = document.getElementById('askForm');
+const questionInput = document.getElementById('question');
+const submitBtn = document.getElementById('submitBtn');
+const stateEl = document.getElementById('state');
+const resultEl = document.getElementById('result');
+const answerText = document.getElementById('answerText');
+const sourcesEl = document.getElementById('sources');
+const apiBaseInput = document.getElementById('apiBase');
+
+document.querySelectorAll('.example').forEach(btn => {
+  btn.addEventListener('click', () => {
+    questionInput.value = btn.dataset.q;
+    form.requestSubmit();
+  });
+});
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderAnswer(text) {
+  // light markdown-ish bold rendering for **text**
+  const escaped = escapeHtml(text);
+  return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const question = questionInput.value.trim();
+  if (!question) return;
+
+  const apiBase = apiBaseInput.value.trim().replace(/\/$/, '');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Asking…';
+  resultEl.classList.remove('show');
+  stateEl.className = 'state';
+  stateEl.textContent = 'Retrieving and generating…';
+
+  try {
+    const res = await fetch(`${apiBase}/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, top_k: 5, deduplicate: true })
+    });
+
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      throw new Error(errBody.detail || `Request failed (${res.status})`);
+    }
+
+    const data = await res.json();
+    stateEl.textContent = '';
+    answerText.innerHTML = renderAnswer(data.answer || '(no answer returned)');
+
+    sourcesEl.innerHTML = '';
+    (data.retrieved_chunks || []).forEach(chunk => {
+      const div = document.createElement('div');
+      div.className = 'source';
+      div.innerHTML = `
+        <div class="source-meta">
+          <span>${escapeHtml(chunk.source)}</span>
+          <span class="dist">distance ${chunk.distance.toFixed(3)}</span>
+        </div>
+        <div class="source-text">${escapeHtml(chunk.text)}</div>
+      `;
+      sourcesEl.appendChild(div);
+    });
+
+    resultEl.classList.add('show');
+  } catch (err) {
+    stateEl.className = 'state error';
+    stateEl.textContent = `Error: ${err.message}. Is the API running at ${apiBase}?`;
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Ask';
+  }
+});
+</script>
+</body>
+</html>
