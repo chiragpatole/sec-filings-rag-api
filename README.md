@@ -4,7 +4,7 @@ A retrieval-augmented Q&A API over **real** SEC EDGAR 10-K/10-Q filings. Ask a q
 
 Built end-to-end: real data ingestion, a from-scratch cleaning/chunking pipeline, vector search, an LLM generation layer, a containerized backend, and a live deployment on AWS.
 
-## What it does
+## What it does...
 
 1. Pulls real 10-K and 10-Q filings for Tesla, Apple, and Microsoft directly from the [SEC EDGAR API](https://www.sec.gov/edgar/sec-api-documentation)
 2. Cleans the raw HTML, isolates the Risk Factors section, and splits it into sentence-safe chunks
